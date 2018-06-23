@@ -88,7 +88,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>速度</string>
+      <string>延时</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -131,12 +131,34 @@
       <rect>
        <x>70</x>
        <y>110</y>
-       <width>160</width>
+       <width>121</width>
        <height>22</height>
       </rect>
      </property>
+     <property name="minimum">
+      <number>10</number>
+     </property>
+     <property name="maximum">
+      <number>1000</number>
+     </property>
+     <property name="value">
+      <number>100</number>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="period_label">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>112</y>
+       <width>41</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>100</string>
      </property>
     </widget>
    </widget>
@@ -203,6 +225,15 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>100</number>
+     </property>
+     <property name="value">
+      <number>20</number>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -217,7 +248,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string>20</string>
      </property>
     </widget>
     <widget class="QListView" name="listView">
