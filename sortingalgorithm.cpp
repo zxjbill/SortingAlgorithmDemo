@@ -23,6 +23,10 @@ bool SortingAlgorithm::sorting_Stepbystep(vector<int> &vc, vector<int> &position
     switch (sortType) {
     case Bubble_Sort:
         return sorting_SBS_Bubble_Sort(vc, position);
+        break;
+    case Select_Sort:
+        return sorting_SBS_Selection_Sort(vc, position);
+        break;
     default:
         return true;
     }
@@ -86,7 +90,62 @@ bool SortingAlgorithm::sorting_SBS_Bubble_Sort(vector<int> &vc, vector<int> &pos
 
 bool SortingAlgorithm::sorting_SBS_Selection_Sort(vector<int> &vc, vector<int> &position)
 {
+    int vc_size = vc.size();
 
+    if (vc[position[1]] > vc[position[2]])
+    {
+        if (vc_size - 1 > position[2])
+        {
+            position[0] = position[2];
+            position[1] = position[2];
+            position[2] = position[2] + 1;
+            return false;
+        }
+        else if (position[3] == vc_size - 3)
+        {
+            swap_ab(vc[position[3] + 1], vc[position[2]]);
+            position[3] = vc_size - 1;
+            position[0] = position[3];
+            position[1] = position[0];
+            position[2] = position[1];
+            return true;
+        }
+        else
+        {
+            swap_ab(vc[position[3] + 1], vc[position[2]]);
+            position[3] = position[3] + 1;
+            position[0] = position[3] + 1;
+            position[1] = position[0];
+            position[2] = position[1] + 1;
+            return false;
+        }
+    }
+    else if (position[2] == vc_size - 1)
+    {
+        swap_ab(vc[position[3] + 1], vc[position[0]]);
+
+        if (position[3] == vc_size -3)
+        {
+            position[3] = vc_size - 1;
+            position[0] = position[3];
+            position[1] = position[0];
+            position[2] = position[1];
+            return true;
+        }
+        else
+        {
+            position[3]++;
+            position[0] = position[3] + 1;
+            position[1] = position[0];
+            position[2] = position[1] + 1;
+            return false;
+        }
+    }
+    else
+    {
+        position[2]++;
+        return false;
+    }
 }
 
 vector<int> SortingAlgorithm::random_vector(int n)

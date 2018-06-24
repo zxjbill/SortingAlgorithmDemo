@@ -39,12 +39,16 @@ private:
     int id1, id2, id3;
     vector<int> vc1;
     vector<int> position;
+    vector<int> red_position;
+    vector<int> blue_position;
+    vector<int> green_position;
     bool isSorting =false;
     bool is_completed = false;
-    SortingAlgorithm::SortType now_sorting_type = SortingAlgorithm::Bubble_Sort;
+    SortingAlgorithm::SortType now_sorting_type = SortingAlgorithm::Select_Sort;
     int data_size = 20;
     int timer_period = 100;
     bool is_stop = false;
+    void SelectColor();
 };
 
 #endif // MAINWINDOW_H

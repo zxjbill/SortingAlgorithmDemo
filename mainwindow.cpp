@@ -6,17 +6,21 @@
 #include <QDebug>
 #include "stdlib.h"
 #include <QDebug>
+#include <algorithm>
 
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
-{
+{    
+    now_sorting_type = SortingAlgorithm::Select_Sort;
     ui->setupUi(this);
     vc1 = SortingAlgorithm::random_vector(20);
     qDebug() << vc1.size();
-    position = vector<int>({0, 0, 0, int(vc1.size()), 0});
+    red_position.clear();
+    blue_position.clear();
+    green_position.clear();
 }
 
 MainWindow::~MainWindow()
@@ -28,7 +32,7 @@ void MainWindow::timerEvent(QTimerEvent *event)
 {
     if (event->timerId() == id1)
     {
-        is_completed = SortingAlgorithm::sorting_Stepbystep(vc1, position, SortingAlgorithm::Bubble_Sort);
+        is_completed = SortingAlgorithm::sorting_Stepbystep(vc1, position, now_sorting_type);
 
         update();
 
@@ -85,16 +89,49 @@ void MainWindow::paintEvent(QPaintEvent *)
     for (int j = 0; j < int(vc1.size()); ++j)
     {
         int height = vc1[j];
-        if (j == position[0] || j == position[1])
+        bool is_change_color = false;
+
+        this->SelectColor();
+        // 设置绘制条状的色彩
+        for (auto p_iter = blue_position.begin(); p_iter != blue_position.end(); p_iter++)
         {
-            painter.setBrush(Qt::blue);
-            painter.setPen(Qt::blue);
+            if (*p_iter == j)
+            {
+                painter.setBrush(Qt::blue);
+                painter.setPen(Qt::blue);
+                is_change_color = true;
+                break;
+            }
         }
-        else
+
+        for (auto p_iter = red_position.begin(); p_iter != red_position.end(); p_iter++)
+        {
+            if (*p_iter == j)
+            {
+                painter.setBrush(Qt::blue);
+                painter.setPen(Qt::blue);
+                is_change_color = true;
+                break;
+            }
+        }
+
+        for (auto p_iter = green_position.begin(); p_iter != green_position.end(); p_iter++)
+        {
+            if (*p_iter == j)
+            {
+                painter.setBrush(Qt::green);
+                painter.setPen(Qt::green);
+                is_change_color = true;
+                break;
+            }
+        }
+
+        if (!is_change_color)
         {
             painter.setBrush(Qt::black);
             painter.setPen(Qt::black);
         }
+
         float x = x_startPosition + delta_x + j * step_lenth;
         float y = y_startPosition + bg_height - y_step * height;
         painter.drawRect(x, y, step_lenth, y_step * height);
@@ -105,6 +142,17 @@ void MainWindow::on_runBtn_clicked()
 {
     id1 = startTimer(timer_period);
     this->isSorting = true;
+
+    switch (now_sorting_type) {
+    case SortingAlgorithm::Bubble_Sort:
+        position = vector<int>({0, 0, 0, int(vc1.size()), 0});
+        break;
+    case SortingAlgorithm::Select_Sort:
+        position = vector<int>({0, 0, 1, -1});
+        break;
+    default:
+        break;
+    }
 }
 
 void MainWindow::on_horizontalSlider_2_valueChanged(int value)
@@ -135,4 +183,32 @@ void MainWindow::on_horizontalSlider_valueChanged(int value)
 void MainWindow::on_stepBtn_clicked()
 {
     is_stop = true;
+}
+
+void MainWindow::SelectColor()
+{
+    if (position.size() < 3)
+    {
+        return;
+    }
+
+    switch (now_sorting_type) {
+    case SortingAlgorithm::Bubble_Sort:
+        blue_position.clear();
+        red_position.clear();
+        green_position.clear();
+        red_position.push_back(position[0]);
+        red_position.push_back(position[1]);
+        break;
+    case SortingAlgorithm::Select_Sort:
+        blue_position.clear();
+        red_position.clear();
+        green_position.clear();
+        blue_position.push_back(position[0]);
+        red_position.push_back(position[2]);
+        green_position.push_back(position[3]);
+        break;
+    default:
+        break;
+    }
 }

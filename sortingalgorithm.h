@@ -8,7 +8,7 @@ class SortingAlgorithm
 {
 public:
     SortingAlgorithm();
-    enum SortType {Bubble_Sort, SortType2};
+    enum SortType {Bubble_Sort, Select_Sort};
     static bool sorting_Stepbystep(vector<int> &vc, vector<int> &position, SortType sortType);
     static vector<int> random_vector(int n);
 
