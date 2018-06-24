@@ -32,6 +32,8 @@ private slots:
 
     void on_horizontalSlider_valueChanged(int value);
 
+    void on_stepBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
     int id1, id2, id3;
@@ -42,6 +44,7 @@ private:
     SortingAlgorithm::SortType now_sorting_type = SortingAlgorithm::Bubble_Sort;
     int data_size = 20;
     int timer_period = 100;
+    bool is_stop = false;
 };
 
 #endif // MAINWINDOW_H

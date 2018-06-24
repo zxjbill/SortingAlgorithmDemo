@@ -4,6 +4,8 @@
 #include "QPainter"
 #include <vector>
 #include <QDebug>
+#include "stdlib.h"
+#include <QDebug>
 
 using namespace std;
 
@@ -13,7 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     vc1 = SortingAlgorithm::random_vector(20);
-    position = vector<int>({0, 0, 0, vc1.size(), 0});
+    qDebug() << vc1.size();
+    position = vector<int>({0, 0, 0, int(vc1.size()), 0});
 }
 
 MainWindow::~MainWindow()
@@ -34,6 +37,12 @@ void MainWindow::timerEvent(QTimerEvent *event)
             killTimer(id1);
         }
     }
+
+    if (is_stop)
+    {
+        killTimer(id1);
+        is_stop = false;
+    }
 }
 
 void MainWindow::paintEvent(QPaintEvent *)
@@ -53,7 +62,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 
     // 画条纹
     painter.setBrush(Qt::black);
-    painter.setPen(Qt::red);
+    painter.setPen(Qt::black);
 
     float delta_x = 5;
     float delta_y = 10;
@@ -73,16 +82,18 @@ void MainWindow::paintEvent(QPaintEvent *)
 
     float y_step = (bg_height - delta_y) / vc1_max;
 
-    for (unsigned int j = 0; j < vc1.size(); ++j)
+    for (int j = 0; j < int(vc1.size()); ++j)
     {
         int height = vc1[j];
         if (j == position[0] || j == position[1])
         {
             painter.setBrush(Qt::blue);
+            painter.setPen(Qt::blue);
         }
         else
         {
             painter.setBrush(Qt::black);
+            painter.setPen(Qt::black);
         }
         float x = x_startPosition + delta_x + j * step_lenth;
         float y = y_startPosition + bg_height - y_step * height;
@@ -99,19 +110,29 @@ void MainWindow::on_runBtn_clicked()
 void MainWindow::on_horizontalSlider_2_valueChanged(int value)
 {
     data_size = value;
-    ui->sizeLabel->setText(QString(value));
+    char *size_s = new char[3];
+    itoa(value, size_s, 10);
+    ui->sizeLabel->setText(size_s);
+    delete size_s;
 }
 
 void MainWindow::on_resetBtn_clicked()
 {
-    vc1 = SortingAlgorithm::random_vector(20);
-    position = vector<int>({0, 0, 0, vc1.size(), 0});
+    vc1 = SortingAlgorithm::random_vector(data_size);
+    position = vector<int>({0, 0, 0, int(vc1.size()), 0});
     update();
 }
 
 void MainWindow::on_horizontalSlider_valueChanged(int value)
 {
     timer_period = value;
+    char *period_s = new char[4];
+    itoa(value, period_s, 10);
+    ui->period_label->setText(period_s);
+    delete period_s;
+}
 
-    ui->period_label->setText(QString(value));
+void MainWindow::on_stepBtn_clicked()
+{
+    is_stop = true;
 }

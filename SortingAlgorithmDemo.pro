@@ -34,3 +34,5 @@ HEADERS += \
 
 FORMS += \
         mainwindow.ui
+
+RC_ICONS = Sort.ico

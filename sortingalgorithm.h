@@ -14,6 +14,7 @@ public:
 
 private:
     static bool sorting_SBS_Bubble_Sort(vector<int> &vc, vector<int> &position);
+    static bool sorting_SBS_Selection_Sort(vector<int> &vc, vector<int> &position);
 };
 
 #endif // SORTINGALGORITHM_H

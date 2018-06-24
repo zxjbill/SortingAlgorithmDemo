@@ -50,7 +50,7 @@ bool SortingAlgorithm::sorting_SBS_Bubble_Sort(vector<int> &vc, vector<int> &pos
     {
         position[1] = position[0];
         position[2] = position[1];
-        position[4] = 1;
+        position[4] = position[1];
         return false;
     }
     else if (position[1] == position[2])
@@ -82,6 +82,11 @@ bool SortingAlgorithm::sorting_SBS_Bubble_Sort(vector<int> &vc, vector<int> &pos
             return false;
         }
     }
+}
+
+bool SortingAlgorithm::sorting_SBS_Selection_Sort(vector<int> &vc, vector<int> &position)
+{
+
 }
 
 vector<int> SortingAlgorithm::random_vector(int n)
