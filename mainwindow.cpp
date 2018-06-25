@@ -25,6 +25,12 @@ MainWindow::MainWindow(QWidget *parent) :
     sort_type_text.append(tr("选择排序"));
     sort_type_text.append(tr("冒泡排序"));
     ui->sort_type_ComBox->addItems(sort_type_text);
+
+    QStringList data_type_text;
+    data_type_text.append(tr("随机数据"));
+    data_type_text.append(tr("顺序数据"));
+    data_type_text.append(tr("逆序数据"));
+    ui->data_type_Combox->addItems(data_type_text);
 }
 
 MainWindow::~MainWindow()
@@ -170,7 +176,31 @@ void MainWindow::on_horizontalSlider_2_valueChanged(int value)
 
 void MainWindow::on_resetBtn_clicked()
 {
-    vc1 = SortingAlgorithm::random_vector(data_size);
+    switch (ui->sort_type_ComBox->currentIndex()) {
+    case 0:
+        this->now_sorting_type = SortingAlgorithm::Select_Sort;
+        break;
+    case 1:
+        now_sorting_type = SortingAlgorithm::Bubble_Sort;
+        break;
+    default:
+        break;
+    }
+
+    switch (ui->data_type_Combox->currentIndex()) {
+    case 0:
+        vc1 = SortingAlgorithm::random_vector(data_size);
+        break;
+    case 1:
+        vc1 = SortingAlgorithm::positive_vector(data_size);
+        break;
+    case 2:
+        vc1 = SortingAlgorithm::reverse_vector(data_size);
+        break;
+    default:
+        break;
+    }
+
     position = vector<int>({0, 0, 0, int(vc1.size()), 0});
     update();
 }

@@ -11,6 +11,8 @@ public:
     enum SortType {Bubble_Sort, Select_Sort};
     static bool sorting_Stepbystep(vector<int> &vc, vector<int> &position, SortType sortType);
     static vector<int> random_vector(int n);
+    static vector<int> positive_vector(int n);
+    static vector<int> reverse_vector(int n);
 
 private:
     static bool sorting_SBS_Bubble_Sort(vector<int> &vc, vector<int> &position);

@@ -174,3 +174,27 @@ vector<int> SortingAlgorithm::random_vector(int n)
 
     return r_vector;
 }
+
+vector<int> SortingAlgorithm::positive_vector(int n)
+{
+    vector<int> vc(n, 0);
+
+    for (int i = 0; i < n; i++)
+    {
+        vc[i] = i + 1;
+    }
+
+    return vc;
+}
+
+vector<int> SortingAlgorithm::reverse_vector(int n)
+{
+    vector<int> vc(n,0);
+
+    for (int i = 0; i < n; i++)
+    {
+        vc[i] = n - i;
+    }
+
+    return vc;
+}
