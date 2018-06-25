@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>782</width>
-    <height>477</height>
+    <width>830</width>
+    <height>547</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <widget class="QGroupBox" name="animationControlGBox">
     <property name="geometry">
      <rect>
-      <x>510</x>
+      <x>560</x>
       <y>20</y>
       <width>261</width>
       <height>221</height>
@@ -52,7 +52,7 @@
       <string>重置</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="stepBtn">
+    <widget class="QPushButton" name="stopBtn">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -82,7 +82,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>114</y>
+       <y>152</y>
        <width>54</width>
        <height>12</height>
       </rect>
@@ -94,43 +94,11 @@
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="label_2">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>140</y>
-       <width>54</width>
-       <height>12</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>间隔时间</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-    <widget class="QLabel" name="delayLabel">
-     <property name="geometry">
-      <rect>
-       <x>110</x>
-       <y>141</y>
-       <width>111</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>60ms</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
     <widget class="QSlider" name="horizontalSlider">
      <property name="geometry">
       <rect>
        <x>70</x>
-       <y>110</y>
+       <y>148</y>
        <width>121</width>
        <height>22</height>
       </rect>
@@ -142,7 +110,7 @@
       <number>1000</number>
      </property>
      <property name="value">
-      <number>100</number>
+      <number>50</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -152,7 +120,7 @@
      <property name="geometry">
       <rect>
        <x>210</x>
-       <y>112</y>
+       <y>150</y>
        <width>41</width>
        <height>16</height>
       </rect>
@@ -161,14 +129,27 @@
       <string>100</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="stepBtn">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>110</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>步进</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="inputAndAlgorithmGBox">
     <property name="geometry">
      <rect>
-      <x>510</x>
-      <y>250</y>
+      <x>560</x>
+      <y>260</y>
       <width>261</width>
-      <height>181</height>
+      <height>221</height>
      </rect>
     </property>
     <property name="title">
@@ -190,7 +171,7 @@
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QComboBox" name="comboBox">
+    <widget class="QComboBox" name="data_type_Combox">
      <property name="geometry">
       <rect>
        <x>90</x>
@@ -250,15 +231,42 @@
      <property name="text">
       <string>20</string>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
     </widget>
-    <widget class="QListView" name="listView">
+    <widget class="QComboBox" name="sort_type_ComBox">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>80</y>
        <width>231</width>
-       <height>81</height>
+       <height>20</height>
       </rect>
+     </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::DefaultContextMenu</enum>
+     </property>
+     <property name="editable">
+      <bool>false</bool>
+     </property>
+     <property name="currentText">
+      <string/>
+     </property>
+     <property name="currentIndex">
+      <number>-1</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+     </property>
+     <property name="minimumContentsLength">
+      <number>12</number>
+     </property>
+     <property name="duplicatesEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="modelColumn">
+      <number>0</number>
      </property>
     </widget>
    </widget>
@@ -268,7 +276,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>782</width>
+     <width>830</width>
      <height>23</height>
     </rect>
    </property>

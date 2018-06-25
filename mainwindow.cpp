@@ -21,6 +21,10 @@ MainWindow::MainWindow(QWidget *parent) :
     red_position.clear();
     blue_position.clear();
     green_position.clear();
+    QStringList sort_type_text;
+    sort_type_text.append(tr("选择排序"));
+    sort_type_text.append(tr("冒泡排序"));
+    ui->sort_type_ComBox->addItems(sort_type_text);
 }
 
 MainWindow::~MainWindow()
@@ -57,8 +61,8 @@ void MainWindow::paintEvent(QPaintEvent *)
 
     float x_startPosition = 10;
     float y_startPosition = 20;
-    float bg_width = 480;
-    float bg_height = 450;
+    float bg_width = 540;
+    float bg_height = 500;
 
     // 画背景
     painter.drawRect(x_startPosition, y_startPosition,
@@ -180,10 +184,12 @@ void MainWindow::on_horizontalSlider_valueChanged(int value)
     delete period_s;
 }
 
-void MainWindow::on_stepBtn_clicked()
+void MainWindow::on_stopBtn_clicked()
 {
     is_stop = true;
 }
+
+
 
 void MainWindow::SelectColor()
 {
@@ -210,5 +216,39 @@ void MainWindow::SelectColor()
         break;
     default:
         break;
+    }
+}
+
+void MainWindow::on_stepBtn_clicked()
+{
+    if(!isSorting)
+    {
+        switch (now_sorting_type)
+        {
+        case SortingAlgorithm::Bubble_Sort:
+            position = vector<int>({0, 0, 0, int(vc1.size()), 0});
+            break;
+        case SortingAlgorithm::Select_Sort:
+            position = vector<int>({0, 0, 1, -1});
+            break;
+        default:
+            break;
+        }
+
+        isSorting = true;
+    }
+
+    if (isSorting && !is_stop)
+    {
+        killTimer(id1);
+    }
+
+    is_completed = SortingAlgorithm::sorting_Stepbystep(vc1, position, now_sorting_type);
+
+    update();
+
+    if (is_completed)
+    {
+        isSorting = false;
     }
 }
