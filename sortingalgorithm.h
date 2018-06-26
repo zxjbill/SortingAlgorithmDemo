@@ -8,15 +8,17 @@ class SortingAlgorithm
 {
 public:
     SortingAlgorithm();
-    enum SortType {Bubble_Sort, Select_Sort};
-    static bool sorting_Stepbystep(vector<int> &vc, vector<int> &position, SortType sortType);
-    static vector<int> random_vector(int n);
-    static vector<int> positive_vector(int n);
-    static vector<int> reverse_vector(int n);
+    enum SortType {BubbleSort, SelectSort, InsertSort, InsertSortLog};
+    static bool sortingStepbystep(vector<int> &vc, vector<int> &position, SortType sortType);
+    static vector<int> randomVector(int n);
+    static vector<int> positiveVector(int n);
+    static vector<int> reverseVector(int n);
 
 private:
-    static bool sorting_SBS_Bubble_Sort(vector<int> &vc, vector<int> &position);
-    static bool sorting_SBS_Selection_Sort(vector<int> &vc, vector<int> &position);
+    static bool sortingSbsBubbleSort(vector<int> &vc, vector<int> &position);
+    static bool sortingSbsSelectionSort(vector<int> &vc, vector<int> &position);
+    static bool sortingSbsInsertSort(vector<int> &vc, vector<int> &position);
+    static bool sortingSbsInsertSortLog(vector<int> &vc, vector<int> &position);
 };
 
 #endif // SORTINGALGORITHM_H

@@ -18,21 +18,26 @@ SortingAlgorithm::SortingAlgorithm()
 
 }
 
-bool SortingAlgorithm::sorting_Stepbystep(vector<int> &vc, vector<int> &position,SortType sortType)
+bool SortingAlgorithm::sortingStepbystep(vector<int> &vc, vector<int> &position,SortType sortType)
 {
     switch (sortType) {
-    case Bubble_Sort:
-        return sorting_SBS_Bubble_Sort(vc, position);
+    case BubbleSort:
+        return sortingSbsBubbleSort(vc, position);
         break;
-    case Select_Sort:
-        return sorting_SBS_Selection_Sort(vc, position);
+    case SelectSort:
+        return sortingSbsSelectionSort(vc, position);
         break;
+    case InsertSort:
+        return sortingSbsInsertSort(vc, position);
+        break;
+    case InsertSortLog:
+        return sortingSbsInsertSortLog(vc, position);
     default:
         return true;
     }
 }
 
-bool SortingAlgorithm::sorting_SBS_Bubble_Sort(vector<int> &vc, vector<int> &position)
+bool SortingAlgorithm::sortingSbsBubbleSort(vector<int> &vc, vector<int> &position)
 {
     if (position[0] != position[1] && position[0] == position[2])
     {
@@ -88,7 +93,7 @@ bool SortingAlgorithm::sorting_SBS_Bubble_Sort(vector<int> &vc, vector<int> &pos
     }
 }
 
-bool SortingAlgorithm::sorting_SBS_Selection_Sort(vector<int> &vc, vector<int> &position)
+bool SortingAlgorithm::sortingSbsSelectionSort(vector<int> &vc, vector<int> &position)
 {
     int vc_size = vc.size();
 
@@ -148,7 +153,90 @@ bool SortingAlgorithm::sorting_SBS_Selection_Sort(vector<int> &vc, vector<int> &
     }
 }
 
-vector<int> SortingAlgorithm::random_vector(int n)
+bool SortingAlgorithm::sortingSbsInsertSort(vector<int> &vc, vector<int> &position)
+{
+    auto num = vc[position[3] + 1];
+
+    if (position[0] == -1)
+    {
+        vc.erase(vc.begin() + position[3] +1);
+        vc.insert(vc.begin(), num);
+
+        position[3] = position[3] + 1;
+        position[0] = position[3];
+        return (position[3] == vc.size() - 1) ? true : false;
+    }
+
+    if (vc[position[0]] > num)
+    {
+        --position[0];
+        return false;
+    }
+    else
+    {
+        vc.erase(vc.begin() + position[3] +1);
+        vc.insert(vc.begin() + position[0] + 1, num);
+        position[3] = position[3] + 1;
+        position[0] = position[3];
+        return (position[3] == vc.size() - 1) ? true : false;
+    }
+}
+
+bool SortingAlgorithm::sortingSbsInsertSortLog(vector<int> &vc, vector<int> &position)
+{
+    int num = vc[position[3] + 1];
+    int insert_position = -1;
+    bool isDone = false;
+
+    if (num < vc[position[0]])
+    {
+        if (position[0] == 0)
+        {
+            insert_position = 0;
+        }
+        else
+        {
+            position[2] = position[0];
+            position[0] = (position[0] + position[1]) / 2;
+        }
+    }
+    else if (num == vc[position[0]])
+    {
+        insert_position = position[0];
+    }
+    else
+    {
+        if (position[0] == position[3])
+        {
+            insert_position = position[3] + 1;
+        }
+        else if (position[0] - position[2] == -1)
+        {
+            insert_position = position[2];
+        }
+        else
+        {
+            position[1] = position[0];
+            position[0] = (position[1] + position[2]) / 2;
+        }
+    }
+
+    if (insert_position != -1)
+    {
+        vc.erase(vc.begin() + position[3] +1);
+        vc.insert(vc.begin() + insert_position, num);
+
+        isDone = position[3] == vc.size() -2;
+        position[3] = position[3] + 1;
+        position[2] = position[3];
+        position[1] = 0;
+        position[0] = position[3];
+    }
+
+    return isDone;
+}
+
+vector<int> SortingAlgorithm::randomVector(int n)
 {
     qsrand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
 
@@ -175,7 +263,7 @@ vector<int> SortingAlgorithm::random_vector(int n)
     return r_vector;
 }
 
-vector<int> SortingAlgorithm::positive_vector(int n)
+vector<int> SortingAlgorithm::positiveVector(int n)
 {
     vector<int> vc(n, 0);
 
@@ -187,7 +275,7 @@ vector<int> SortingAlgorithm::positive_vector(int n)
     return vc;
 }
 
-vector<int> SortingAlgorithm::reverse_vector(int n)
+vector<int> SortingAlgorithm::reverseVector(int n)
 {
     vector<int> vc(n,0);
 

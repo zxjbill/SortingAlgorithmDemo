@@ -14,9 +14,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {    
-    now_sorting_type = SortingAlgorithm::Select_Sort;
+    now_sorting_type = SortingAlgorithm::SelectSort;
     ui->setupUi(this);
-    vc1 = SortingAlgorithm::random_vector(20);
+    vc1 = SortingAlgorithm::randomVector(20);
     qDebug() << vc1.size();
     red_position.clear();
     blue_position.clear();
@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QStringList sort_type_text;
     sort_type_text.append(tr("选择排序"));
     sort_type_text.append(tr("冒泡排序"));
+    sort_type_text.append(tr("插入排序"));
+    sort_type_text.append(tr("二分插入排序"));
     ui->sort_type_ComBox->addItems(sort_type_text);
 
     QStringList data_type_text;
@@ -42,7 +44,7 @@ void MainWindow::timerEvent(QTimerEvent *event)
 {
     if (event->timerId() == id1)
     {
-        is_completed = SortingAlgorithm::sorting_Stepbystep(vc1, position, now_sorting_type);
+        is_completed = SortingAlgorithm::sortingStepbystep(vc1, position, now_sorting_type);
 
         update();
 
@@ -103,7 +105,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 
         this->SelectColor();
         // 设置绘制条状的色彩
-        for (auto p_iter = blue_position.begin(); p_iter != blue_position.end(); p_iter++)
+        for (auto p_iter = blue_position.begin(); p_iter != blue_position.end(); ++p_iter)
         {
             if (*p_iter == j)
             {
@@ -114,7 +116,7 @@ void MainWindow::paintEvent(QPaintEvent *)
             }
         }
 
-        for (auto p_iter = red_position.begin(); p_iter != red_position.end(); p_iter++)
+        for (auto p_iter = red_position.begin(); p_iter != red_position.end(); ++p_iter)
         {
             if (*p_iter == j)
             {
@@ -125,7 +127,7 @@ void MainWindow::paintEvent(QPaintEvent *)
             }
         }
 
-        for (auto p_iter = green_position.begin(); p_iter != green_position.end(); p_iter++)
+        for (auto p_iter = green_position.begin(); p_iter != green_position.end(); ++p_iter)
         {
             if (*p_iter == j)
             {
@@ -154,11 +156,17 @@ void MainWindow::on_runBtn_clicked()
     this->isSorting = true;
 
     switch (now_sorting_type) {
-    case SortingAlgorithm::Bubble_Sort:
+    case SortingAlgorithm::BubbleSort:
         position = vector<int>({0, 0, 0, int(vc1.size()), 0});
         break;
-    case SortingAlgorithm::Select_Sort:
+    case SortingAlgorithm::SelectSort:
         position = vector<int>({0, 0, 1, -1});
+        break;        
+    case SortingAlgorithm::InsertSort:
+        position = vector<int>({0,0,0,0});
+        break;
+    case SortingAlgorithm::InsertSortLog:
+        position = vector<int>({0,0,0,0});
         break;
     default:
         break;
@@ -178,24 +186,29 @@ void MainWindow::on_resetBtn_clicked()
 {
     switch (ui->sort_type_ComBox->currentIndex()) {
     case 0:
-        this->now_sorting_type = SortingAlgorithm::Select_Sort;
+        now_sorting_type = SortingAlgorithm::SelectSort;
         break;
     case 1:
-        now_sorting_type = SortingAlgorithm::Bubble_Sort;
+        now_sorting_type = SortingAlgorithm::BubbleSort;
         break;
+    case 2:
+        now_sorting_type = SortingAlgorithm::InsertSort;
+        break;
+    case 3:
+        now_sorting_type = SortingAlgorithm::InsertSortLog;
     default:
         break;
     }
 
     switch (ui->data_type_Combox->currentIndex()) {
     case 0:
-        vc1 = SortingAlgorithm::random_vector(data_size);
+        vc1 = SortingAlgorithm::randomVector(data_size);
         break;
     case 1:
-        vc1 = SortingAlgorithm::positive_vector(data_size);
+        vc1 = SortingAlgorithm::positiveVector(data_size);
         break;
     case 2:
-        vc1 = SortingAlgorithm::reverse_vector(data_size);
+        vc1 = SortingAlgorithm::reverseVector(data_size);
         break;
     default:
         break;
@@ -229,14 +242,14 @@ void MainWindow::SelectColor()
     }
 
     switch (now_sorting_type) {
-    case SortingAlgorithm::Bubble_Sort:
+    case SortingAlgorithm::BubbleSort:
         blue_position.clear();
         red_position.clear();
         green_position.clear();
         red_position.push_back(position[0]);
         red_position.push_back(position[1]);
         break;
-    case SortingAlgorithm::Select_Sort:
+    case SortingAlgorithm::SelectSort:
         blue_position.clear();
         red_position.clear();
         green_position.clear();
@@ -244,6 +257,21 @@ void MainWindow::SelectColor()
         red_position.push_back(position[2]);
         green_position.push_back(position[3]);
         break;
+    case SortingAlgorithm::InsertSort:
+        blue_position.clear();
+        red_position.clear();
+        green_position.clear();
+        red_position.push_back(position[0]);
+        green_position.push_back(position[3]);
+        break;
+    case SortingAlgorithm::InsertSortLog:
+        blue_position.clear();
+        red_position.clear();
+        green_position.clear();
+        red_position.push_back(position[0]);
+        blue_position.push_back(position[1]);
+        blue_position.push_back(position[2]);
+        green_position.push_back(position[3]);
     default:
         break;
     }
@@ -255,11 +283,17 @@ void MainWindow::on_stepBtn_clicked()
     {
         switch (now_sorting_type)
         {
-        case SortingAlgorithm::Bubble_Sort:
+        case SortingAlgorithm::BubbleSort:
             position = vector<int>({0, 0, 0, int(vc1.size()), 0});
             break;
-        case SortingAlgorithm::Select_Sort:
+        case SortingAlgorithm::SelectSort:
             position = vector<int>({0, 0, 1, -1});
+            break;
+        case SortingAlgorithm::InsertSort:
+            position = vector<int>({0,0,0,0});
+            break;
+        case SortingAlgorithm::InsertSortLog:
+            position = vector<int>({0,0,0,0});
             break;
         default:
             break;
@@ -273,7 +307,7 @@ void MainWindow::on_stepBtn_clicked()
         killTimer(id1);
     }
 
-    is_completed = SortingAlgorithm::sorting_Stepbystep(vc1, position, now_sorting_type);
+    is_completed = SortingAlgorithm::sortingStepbystep(vc1, position, now_sorting_type);
 
     update();
 

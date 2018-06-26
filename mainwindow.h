@@ -46,7 +46,7 @@ private:
     vector<int> green_position;
     bool isSorting =false;
     bool is_completed = false;
-    SortingAlgorithm::SortType now_sorting_type = SortingAlgorithm::Select_Sort;
+    SortingAlgorithm::SortType now_sorting_type = SortingAlgorithm::SelectSort;
     int data_size = 20;
     int timer_period = 100;
     bool is_stop = false;
