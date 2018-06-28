@@ -2,6 +2,7 @@
 #include <vector>
 #include <QDebug>
 #include <QTime>
+#include <math.h>
 
 using namespace std;
 
@@ -38,6 +39,9 @@ bool SortingAlgorithm::sortingStepbystep(vector<int> &vc, vector<int> &position,
         break;
     case ShellSort:
         return sortingSbsShellSort(vc, position);
+        break;
+    case HeapSort:
+        return sortingSbsHeapSort(vc, position);
         break;
     default:
         return true;
@@ -172,7 +176,7 @@ bool SortingAlgorithm::sortingSbsInsertSort(vector<int> &vc, vector<int> &positi
 
         position[3] = position[3] + 1;
         position[0] = position[3];
-        return (position[3] == vc.size() - 1) ? true : false;
+        return (position[3] == int(vc.size()) - 1) ? true : false;
     }
 
     if (vc[position[0]] > num)
@@ -188,7 +192,7 @@ bool SortingAlgorithm::sortingSbsInsertSort(vector<int> &vc, vector<int> &positi
         position[2] = 1;  //作为是否交换顺序的标志
         position[3] = position[3] + 1;
         position[0] = position[3];
-        return (position[3] == vc.size() - 1) ? true : false;
+        return (position[3] == int(vc.size()) - 1) ? true : false;
     }
 }
 
@@ -381,6 +385,104 @@ bool SortingAlgorithm::sortingSbsShellSort(vector<int> &vc, vector<int> &positio
     }
 
     return false;
+}
+
+bool SortingAlgorithm::sortingSbsHeapSort(vector<int> &vc, vector<int> &position)
+{
+    // position:第2个数0代表建堆，非零代表出堆
+    // 第3个数建堆最新位置，第4个数代表建堆下滑位
+    // 第0个数出堆最新位置，第1个数出堆插入位置
+
+    if (!position[2])
+    {
+        int next_position = BuildHeapSbs(vc, position[4], vc.size() - 1);
+
+        if (next_position == position[4])
+        {
+            if (position[3] > 0)
+            {
+                --position[3];
+                position[4] = position[3];
+                return false;
+            }
+            else
+            {
+                position[2] = 1;
+                swap_ab(vc[0], vc[vc.size() - 1]);
+                position[0] = 0;
+                position[1] = vc.size() - 2;
+                position[3] = -1;
+                position[4] = -1;
+                return false;
+            }
+        }
+        else
+        {
+            position[4] = next_position;
+            return false;
+        }
+    }
+    else
+    {
+        int next_position = BuildHeapSbs(vc, position[0], position[1]);
+
+        if (next_position == position[0])
+        {
+            if (position[1] > 2)
+            {
+                swap_ab(vc[0], vc[position[1]]);
+                --position[1];
+                position[0] = 0;
+                return false;
+            }
+            else
+            {
+                swap_ab(vc[0], vc[position[1]]);
+                position[0] = 0;
+                position[1] = 0;
+                return true;
+            }
+        }
+        else
+        {
+            position[0] = next_position;
+            return false;
+        }
+    }
+}
+
+int SortingAlgorithm::BuildHeapSbs(vector<int> &vc, int position, int boundery)
+{
+    // TODO 要设置vc的边界
+    // position: 建堆位置， 返回值位下一步建堆位置
+    int num;
+    int comparePosition;
+
+    if (2 * position + 2 <= boundery && vc[2 * position + 1] < vc[2 * position + 2])
+    {
+        comparePosition = position * 2 + 2;
+        num = vc[2 * position +2];
+    }
+    else
+    {
+        comparePosition = position * 2 + 1;
+        num = vc[2 * position +1];
+    }
+
+    bool isSwap = false;
+
+    if (num > vc[position])
+    {
+        isSwap = true;
+        swap_ab(vc[position], vc[comparePosition]);
+    }
+
+    if (!isSwap || (comparePosition > ((boundery - 1) / 2)))
+    {
+        return position;
+    }
+
+    return comparePosition;
 }
 
 vector<int> SortingAlgorithm::randomVector(int n)
