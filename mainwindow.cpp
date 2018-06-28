@@ -26,6 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
     sort_type_text.append(tr("冒泡排序"));
     sort_type_text.append(tr("插入排序"));
     sort_type_text.append(tr("二分插入排序"));
+    sort_type_text.append(tr("快速排序"));
+    sort_type_text.append(tr("希尔排序"));
     ui->sort_type_ComBox->addItems(sort_type_text);
 
     QStringList data_type_text;
@@ -168,6 +170,12 @@ void MainWindow::on_runBtn_clicked()
     case SortingAlgorithm::InsertSortLog:
         position = vector<int>({0,0,0,0});
         break;
+    case SortingAlgorithm::QuickSort:
+        position = vector<int>({0, int(vc1.size() - 1), -1, int(vc1.size())});
+        break;
+    case SortingAlgorithm::ShellSort:
+        position = vector<int>({0, 0, 0, vc1.size() / 2});
+        break;
     default:
         break;
     }
@@ -196,6 +204,13 @@ void MainWindow::on_resetBtn_clicked()
         break;
     case 3:
         now_sorting_type = SortingAlgorithm::InsertSortLog;
+        break;
+    case 4:
+        now_sorting_type = SortingAlgorithm::QuickSort;
+        break;
+    case 5:
+        now_sorting_type = SortingAlgorithm::ShellSort;
+        break;
     default:
         break;
     }
@@ -272,6 +287,21 @@ void MainWindow::SelectColor()
         blue_position.push_back(position[1]);
         blue_position.push_back(position[2]);
         green_position.push_back(position[3]);
+        break;
+    case SortingAlgorithm::QuickSort:
+        blue_position.clear();
+        red_position.clear();
+        green_position.clear();
+        red_position.push_back(position[0]);
+        blue_position.push_back(position[1]);
+        break;
+    case SortingAlgorithm::ShellSort:
+        blue_position.clear();
+        red_position.clear();
+        green_position.clear();
+        red_position.push_back(position[2] + position[3] * position[0]);
+        blue_position.push_back(position[2] + position[3] * position[1]);
+        break;
     default:
         break;
     }
@@ -294,6 +324,12 @@ void MainWindow::on_stepBtn_clicked()
             break;
         case SortingAlgorithm::InsertSortLog:
             position = vector<int>({0,0,0,0});
+            break;
+        case SortingAlgorithm::QuickSort:
+            position = vector<int>({0, int(vc1.size() - 1), -1, int(vc1.size())});
+            break;
+        case SortingAlgorithm::ShellSort:
+            position = vector<int>({0, 0, 0, vc1.size() / 2});
             break;
         default:
             break;

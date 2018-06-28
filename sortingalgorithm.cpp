@@ -32,6 +32,13 @@ bool SortingAlgorithm::sortingStepbystep(vector<int> &vc, vector<int> &position,
         break;
     case InsertSortLog:
         return sortingSbsInsertSortLog(vc, position);
+        break;
+    case QuickSort:
+        return sortingSbsQuickSort(vc, position);
+        break;
+    case ShellSort:
+        return sortingSbsShellSort(vc, position);
+        break;
     default:
         return true;
     }
@@ -161,6 +168,7 @@ bool SortingAlgorithm::sortingSbsInsertSort(vector<int> &vc, vector<int> &positi
     {
         vc.erase(vc.begin() + position[3] +1);
         vc.insert(vc.begin(), num);
+        position[2] = 1;  //作为是否交换顺序的标志
 
         position[3] = position[3] + 1;
         position[0] = position[3];
@@ -169,13 +177,15 @@ bool SortingAlgorithm::sortingSbsInsertSort(vector<int> &vc, vector<int> &positi
 
     if (vc[position[0]] > num)
     {
-        --position[0];
+        --position[0];        
+        position[2] = 0;  //作为是否交换顺序的标志
         return false;
     }
     else
     {
         vc.erase(vc.begin() + position[3] +1);
         vc.insert(vc.begin() + position[0] + 1, num);
+        position[2] = 1;  //作为是否交换顺序的标志
         position[3] = position[3] + 1;
         position[0] = position[3];
         return (position[3] == vc.size() - 1) ? true : false;
@@ -234,6 +244,143 @@ bool SortingAlgorithm::sortingSbsInsertSortLog(vector<int> &vc, vector<int> &pos
     }
 
     return isDone;
+}
+
+bool SortingAlgorithm::sortingSbsQuickSort(vector<int> &vc, vector<int> &position)
+{
+    // position 第0位：即将检测的数字位；第1位：对比数字位；
+    // 第2位:现有前置位；第3位：现有后置位；
+    // 第4位及4位以后：堆；
+
+    if (position[0] - position[1] == 1 || position[1] - position[0] == 1)
+    {
+        if ((position[0] -position[1]) * (vc[position[0]] - vc[position[1]]) < 0)
+        {
+            swap_ab(vc[position[0]], vc[position[1]]);
+            swap_ab(position[0], position[1]);
+        }
+
+        if(position[1] - position[2] > 2)
+        {
+            position.push_back(position[3]);
+            position[3] = position[1];
+            position[1] = position[3] - 1;
+            position[0] = position[2] + 1;
+            return false;
+        }
+        else
+        {
+            if (position[3] - position[2] > 2)
+            {
+                position[2] = position[1];
+                position[1] = position[3] - 1;
+                position[0] = position[2] + 1;
+                return false;
+            }
+            else
+            {
+                if (position.size() > 4)
+                {
+                    position[2] = position[3];
+                    position[3] = *(--position.end());
+                    position.erase(--position.end());
+                    position[1] = position[3] - 1;
+                    position[0] = position[2] + 1;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
+    if (position[0] > position[1])
+    {
+        if (vc[position[0]] > vc[position[1]])
+        {
+            --position[0];
+            return false;
+        }
+        else
+        {
+            swap_ab(vc[position[0]], vc[position[1]]);
+            swap_ab(position[0], position[1]);
+            ++position[0];
+            return false;
+        }
+    }
+    else
+    {
+        if (vc[position[1]] > vc[position[0]])
+        {
+            ++position[0];
+            return false;
+        }
+        else
+        {
+            swap_ab(vc[position[0]], vc[position[1]]);
+            swap_ab(position[0], position[1]);
+            --position[0];
+            return false;
+        }
+    }
+}
+
+bool SortingAlgorithm::sortingSbsShellSort(vector<int> &vc, vector<int> &position)
+{
+    vector<int> now_vc;
+    vector<int> insertPosition;
+    int delta = position[3];
+
+    for (int i = position[2]; i < int(vc.size()); i = i + delta)
+    {
+        now_vc.push_back(vc[i]);
+    }
+
+    insertPosition = vector<int>({position[0], 0, 0, position[1]});
+
+    bool isOnceQuickDone = sortingSbsInsertSort(now_vc, insertPosition);
+
+    if (insertPosition[2])
+    {
+        for (int i = 0; i < int(now_vc.size()); ++i)
+        {
+            vc[position[2] + i * delta] = now_vc[i];
+        }
+    }
+
+    position[0] = insertPosition[0];
+
+    position[1] = insertPosition[3];
+
+    if (isOnceQuickDone)
+    {
+        if (position[2] + 1 < delta)
+        {
+            ++position[2];
+            position[1] = 0;
+            position[0] = 0;
+            return false;
+        }
+        else
+        {
+            if (delta > 1)
+            {
+                position[3] = position[3] / 2;
+                position[2] = 0;
+                position[1] = 0;
+                position[0] = 0;
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 vector<int> SortingAlgorithm::randomVector(int n)
