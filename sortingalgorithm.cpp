@@ -43,6 +43,9 @@ bool SortingAlgorithm::sortingStepbystep(vector<int> &vc, vector<int> &position,
     case HeapSort:
         return sortingSbsHeapSort(vc, position);
         break;
+    case MergeSort:
+        return sortingSbsMergeSort(vc, position);
+        break;
     default:
         return true;
     }
@@ -483,6 +486,119 @@ int SortingAlgorithm::BuildHeapSbs(vector<int> &vc, int position, int boundery)
     }
 
     return comparePosition;
+}
+
+bool SortingAlgorithm::sortingSbsMergeSort(vector<int> &vc, vector<int> &position)
+{
+    // position: 第0位：0在merge,1在放入
+    // 第1位：已完成排序的段数n
+    // 第2位到2*n+1位：每两位是一对已排序段的前后位置
+    // 第2*n+2到2*n+3位：merge时->比较位置记录，比较位*2;放入时->2*n+2为将要放入位
+    // 第2*n+4位及以后：merge用堆
+    int n = position[1];
+
+    if (!position[0])
+    {
+        if (vc[position[n*2+2]] < vc[position[n*2+3]])
+        {
+            position.push_back(vc[position[n*2+2]]);
+            ++position[n*2+2];
+
+            if (position[n*2+2] > position[n*2-1])
+            {
+                for (int i = position[2*n+3];i <= position[2*n+1];++i)
+                {
+                    position.push_back(vc[i]);
+                }
+
+                position[0] = 1;
+                position[n*2+2] = 0;
+            }
+
+            return false;
+        }
+        else
+        {
+            position.push_back(vc[position[n*2+3]]);
+            ++position[n*2+3];
+
+            if (position[n*2+3] > position[n*2+1])
+            {
+                for (int i = position[2*n+2];i <= position[2*n-1];++i)
+                {
+                    position.push_back(vc[i]);
+                }
+
+                position[0] = 1;
+                position[n*2+2] = 0;
+            }
+
+            return false;
+        }
+    }
+    else
+    {
+        vc[position[2*n-2] + position[n*2+2]] = position[2*n+4 + position[n*2+2]];
+        ++position[n*2+2];
+
+        if (position[n*2+2] > (position[2*n+1]- position[2*n-2]))
+        {
+            position[2*n-1] = position[2*n+1];
+            position.erase(position.begin() + 2*n);
+            position.erase(position.begin() + 2*n + 1);
+            --position[1];
+            --n;
+
+            while (position.size() > 2*n + 4) {
+                position.erase(position.end() - 1);
+            }
+
+            if ((n >= 2
+                 && ((position[2*n+1] - position[2*n]) == (position[2*n-1] - position[2*n-2])))
+                 ||(n >= 2 && (vc.size() - position[2*n + 1] == 1)))
+            {
+                position[0] = 0;
+                position[2*n+2] = position[2*n-2];
+                position[2*n+3] = position[2*n];
+
+                return false;
+            }
+
+            if (vc.size() - position[2*n + 1] == 2)
+            {
+                ++position[1];
+                position[2*n+2] = position[2*n + 1] + 1;
+                position[2*n+3] = position[2*n + 2];
+                ++n;
+                position[0] = 0;
+                position.push_back(position[2*n-2]);
+                position.push_back(position[2*n]);
+                return false;
+            }
+
+            if (vc.size() - position[2*n + 1] >=3)
+            {
+                position[1] += 2;
+                position[2*n+2] = position[2*n + 1] + 1;
+                position[2*n+3] = position[2*n + 2];
+                position.push_back(position[2*n + 1] + 2);
+                position.push_back(position[2*n + 4]);
+                n = n +2;
+                position[0] = 0;
+                position.push_back(position[2*n-2]);
+                position.push_back(position[2*n]);
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
 
 vector<int> SortingAlgorithm::randomVector(int n)

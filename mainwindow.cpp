@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     sort_type_text.append(tr("快速排序"));
     sort_type_text.append(tr("希尔排序"));
     sort_type_text.append(tr("堆排序"));
+    sort_type_text.append(tr("归并排序"));
     ui->sort_type_ComBox->addItems(sort_type_text);
 
     QStringList data_type_text;
@@ -180,6 +181,9 @@ void MainWindow::on_runBtn_clicked()
     case SortingAlgorithm::HeapSort:
         position = vector<int>({-1, -1, 0, (vc1.size() - 1) / 2, (vc1.size() - 1) / 2});
         break;
+    case SortingAlgorithm::MergeSort:
+        position = vector<int>({0, 2, 0, 0, 1, 1, 0, 1});
+        break;
     default:
         break;
     }
@@ -218,6 +222,8 @@ void MainWindow::on_resetBtn_clicked()
     case 6:
         now_sorting_type = SortingAlgorithm::HeapSort;
         break;
+    case 7:
+        now_sorting_type = SortingAlgorithm::MergeSort;
     default:
         break;
     }
@@ -316,6 +322,15 @@ void MainWindow::SelectColor()
         red_position.push_back(position[1]);
         blue_position.push_back(position[0]);
         break;
+    case SortingAlgorithm::MergeSort:
+        blue_position.clear();
+        red_position.clear();
+        green_position.clear();
+        red_position.push_back(position[4]);
+        blue_position.push_back(position[3]);
+        red_position.push_back(position[1]);
+        blue_position.push_back(position[0]);
+        break;
     default:
         break;
     }
@@ -347,6 +362,9 @@ void MainWindow::on_stepBtn_clicked()
             break;
         case SortingAlgorithm::HeapSort:
             position = vector<int>({-1, -1, 0, (vc1.size() - 1) / 2, (vc1.size() - 1) / 2});
+            break;
+        case SortingAlgorithm::MergeSort:
+            position = vector<int>({0, 2, 0, 0, 1, 1, 0, 1});
             break;
         default:
             break;
