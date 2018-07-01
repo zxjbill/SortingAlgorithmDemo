@@ -51,6 +51,8 @@ private:
     int timer_period = 100;
     bool is_stop = false;
     void SelectColor();
+    vector<int> colorful_position;
+    vector<int> color_calculator(int index, int total);
 };
 
 #endif // MAINWINDOW_H

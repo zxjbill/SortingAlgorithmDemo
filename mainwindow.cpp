@@ -17,7 +17,6 @@ MainWindow::MainWindow(QWidget *parent) :
     now_sorting_type = SortingAlgorithm::SelectSort;
     ui->setupUi(this);
     vc1 = SortingAlgorithm::randomVector(20);
-    qDebug() << vc1.size();
     red_position.clear();
     blue_position.clear();
     green_position.clear();
@@ -109,6 +108,25 @@ void MainWindow::paintEvent(QPaintEvent *)
 
         this->SelectColor();
         // 设置绘制条状的色彩
+        if (colorful_position.size() > 0)
+        {
+            int color_num = colorful_position.size() / 2;
+
+            for (int i = 0; i < color_num; ++i)
+            {
+                if (colorful_position[i]<= j && colorful_position[i+1] >=j)
+                {
+                    vector<int> color_vector = color_calculator(i + 1, color_num);
+                    painter.setBrush(QColor(color_vector[0],color_vector[1],color_vector[2], 255));
+                    painter.setPen(QColor(color_vector[0],color_vector[1],color_vector[2], 255));
+                    qDebug()<<color_vector[0];
+                    qDebug()<<color_vector[1];
+                    qDebug()<<color_vector[2];
+                    is_change_color = true;
+                }
+            }
+        }
+
         for (auto p_iter = blue_position.begin(); p_iter != blue_position.end(); ++p_iter)
         {
             if (*p_iter == j)
@@ -267,69 +285,61 @@ void MainWindow::SelectColor()
         return;
     }
 
+    blue_position.clear();
+    red_position.clear();
+    green_position.clear();
+    colorful_position.clear();
+
     switch (now_sorting_type) {
     case SortingAlgorithm::BubbleSort:
-        blue_position.clear();
-        red_position.clear();
-        green_position.clear();
         red_position.push_back(position[0]);
         red_position.push_back(position[1]);
         break;
     case SortingAlgorithm::SelectSort:
-        blue_position.clear();
-        red_position.clear();
-        green_position.clear();
         blue_position.push_back(position[0]);
         red_position.push_back(position[2]);
         green_position.push_back(position[3]);
         break;
     case SortingAlgorithm::InsertSort:
-        blue_position.clear();
-        red_position.clear();
-        green_position.clear();
         red_position.push_back(position[0]);
         green_position.push_back(position[3]);
         break;
     case SortingAlgorithm::InsertSortLog:
-        blue_position.clear();
-        red_position.clear();
-        green_position.clear();
         red_position.push_back(position[0]);
         blue_position.push_back(position[1]);
         blue_position.push_back(position[2]);
         green_position.push_back(position[3]);
         break;
     case SortingAlgorithm::QuickSort:
-        blue_position.clear();
-        red_position.clear();
-        green_position.clear();
         red_position.push_back(position[0]);
         blue_position.push_back(position[1]);
         break;
     case SortingAlgorithm::ShellSort:
-        blue_position.clear();
-        red_position.clear();
-        green_position.clear();
         red_position.push_back(position[2] + position[3] * position[0]);
         blue_position.push_back(position[2] + position[3] * position[1]);
         break;
     case SortingAlgorithm::HeapSort:
-        blue_position.clear();
-        red_position.clear();
-        green_position.clear();
         red_position.push_back(position[4]);
         blue_position.push_back(position[3]);
         red_position.push_back(position[1]);
         blue_position.push_back(position[0]);
         break;
     case SortingAlgorithm::MergeSort:
-        blue_position.clear();
-        red_position.clear();
-        green_position.clear();
-        red_position.push_back(position[4]);
-        blue_position.push_back(position[3]);
-        red_position.push_back(position[1]);
-        blue_position.push_back(position[0]);
+        for (int i = 0; i < position[1]; ++i)
+        {
+            colorful_position.push_back(position[2*i+2]);
+            colorful_position.push_back(position[2*i+3]);
+        }
+
+        if (position[0])
+        {
+            red_position.push_back(position[2*position[1]+2]);
+            red_position.push_back(position[2*position[1]+3]);
+        }
+        else
+        {
+            green_position.push_back(position[2*position[1]-2] + position[2*position[1]+2]);
+        }
         break;
     default:
         break;
@@ -386,4 +396,31 @@ void MainWindow::on_stepBtn_clicked()
     {
         isSorting = false;
     }
+}
+
+vector<int> MainWindow::color_calculator(int index, int total)
+{
+    float p = float(index - 1) / (total - 1);
+    int x,y,z;
+
+    if (p < 0.33)
+    {
+        x = p / 0.33 * 255;
+        y = 0;
+        z = 0;
+    }
+    else if (p < 0.66)
+    {
+        x = (p - 0.66) / (0.33 - 0.66) * 255;
+        y = (p-0.33) / (0.66 - 0.33) * 255;
+        z = 0;
+    }
+    else
+    {
+        x = 0;
+        y = (p - 1) / (0.66 - 1) * 255;
+        z = (p - 0.66) / (1 - 0.66) *255;
+    }
+
+    return vector<int>({x,y,z});
 }
