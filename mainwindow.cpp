@@ -114,7 +114,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 
             for (int i = 0; i < color_num; ++i)
             {
-                if (colorful_position[i]<= j && colorful_position[i+1] >=j)
+                if (colorful_position[i*2]<= j && colorful_position[i*2+1] >=j)
                 {
                     vector<int> color_vector = color_calculator(i + 1, color_num);
                     painter.setBrush(QColor(color_vector[0],color_vector[1],color_vector[2], 255));
@@ -331,7 +331,7 @@ void MainWindow::SelectColor()
             colorful_position.push_back(position[2*i+3]);
         }
 
-        if (position[0])
+        if (!position[0])
         {
             red_position.push_back(position[2*position[1]+2]);
             red_position.push_back(position[2*position[1]+3]);

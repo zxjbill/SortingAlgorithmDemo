@@ -493,7 +493,7 @@ bool SortingAlgorithm::sortingSbsMergeSort(vector<int> &vc, vector<int> &positio
     // position: 第0位：0在merge,1在放入
     // 第1位：已完成排序的段数n
     // 第2位到2*n+1位：每两位是一对已排序段的前后位置
-    // 第2*n+2到2*n+3位：merge时->比较位置记录，比较位*2;放入时->2*n+2为将要放入位
+    // 第2*n+2到2*n+3位：merge时->比较位置记录(实际位置），比较位*2;放入时->2*n+2为将要放入位（相对位置）
     // 第2*n+4位及以后：merge用堆
     int n = position[1];
 
